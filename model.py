@@ -4,7 +4,7 @@ from keras import layers
 import numpy as np
 import spacy
 
-class gpt(keras.Models):
+class gpt(keras.Model):
     def __init__(self, num_blocks, token_dim, num_attention_heads, attention_dim, feed_forward_dim, context_size, activation):
         super().__init__()
         self.num_blocks = num_blocks
@@ -54,13 +54,29 @@ class gpt(keras.Models):
             x = layers.LayerNormalization()(x)
 
         return x
-    
+
+def tokenize(text):
+    nlp = spacy.load('en_core_web_sm')
+    nlp.max_length = 2000000
+    doc = nlp(text)
+
+    token_ids = []
+    id_map = {}
+    for token in doc:
+        if token.text not in id_map:
+            id_map[token.text] = len(id_map)
+        token_id = id_map[token.text]
+        token_ids.append(token_id)
+
+    return token_ids, len(id_map)
+
 def main():
     with open('tiny_shakespeare.txt', 'r', encoding='utf8') as f:
         text = f.read()
 
-    nlp = spacy.load("en_core_web_sm")
-    doc = nlp(text)
+    tokenized_text, token_dim = tokenize(text)
+
+    print(tokenized_text[:10])
 
     model = gpt(
         num_blocks = 12,
@@ -69,7 +85,7 @@ def main():
         attention_dim = 768,
         feed_forward_dim = 3072,
         activation = 'gelu',
-        token_dim = len(doc)
+        token_dim = token_dim
     )
 
 if __name__ == '__main__':
