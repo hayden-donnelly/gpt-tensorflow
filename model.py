@@ -16,6 +16,16 @@ class gpt(keras.Model):
         self.activation = activation
         self.attention_mask = None
 
+    def train_step(self, data):
+        probs = self(data, training = True)
+
+        with tf.GradientTape() as tape:
+            loss = self.compiled_loss(data, probs)
+            gradients = tape.gradient(loss, self.trainable_variables)
+            self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
+
+        return
+
     def call(self, inputs):
         token_embed = layers.Embedding(
             input_dim = self.token_dim, 
@@ -52,6 +62,11 @@ class gpt(keras.Model):
             
             x = layers.Add()([x, ff])
             x = layers.LayerNormalization()(x)
+        
+        x = layers.Dense(
+            units = self.token_dim, 
+            activation = 'softmax'
+        )(x)
 
         return x
 
