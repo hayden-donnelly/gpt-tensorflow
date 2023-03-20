@@ -27,20 +27,20 @@ class gpt(keras.Model):
         self.network = self.create_network()
 
     def train_step(self, data):
-        inputs = data[0]
-        labels = data[1]
-        probs = self.network(inputs, training = True)
-
-        print('inputs shape', inputs.shape)
-        print('labels shape', labels.shape)
-        print('probs shape', probs.shape)
-
         with tf.GradientTape() as tape:
+            inputs = data[0]
+            labels = data[1]
+            probs = self.network(inputs, training = True)
+
+            print('inputs shape', inputs.shape)
+            print('labels shape', labels.shape)
+            print('probs shape', probs.shape)
+
             loss = self.compiled_loss(labels, probs)
             gradients = tape.gradient(loss, self.trainable_variables)
             self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
 
-        return
+        return {m.name: m.result() for m in self.metrics}
 
     def create_network(self):
         inputs = layers.Input((self.context_size))
@@ -49,34 +49,46 @@ class gpt(keras.Model):
             output_dim = self.token_dim
         )(inputs)
 
+        print("token_embed shape", token_embed.shape)
+
         positional_embed = layers.Embedding(
             input_dim = self.context_size, 
             output_dim = self.token_dim
         )(np.arange(self.context_size))
 
-        x = layers.Add()([token_embed, positional_embed])
+        print("positional_embed shape", positional_embed.shape)
+
+        print("added shape", (token_embed + positional_embed).shape)
+
+        x = token_embed + positional_embed
+
+        print("x shape", x.shape)
 
         for _ in range(self.num_blocks):
             att = layers.MultiHeadAttention(
                 num_heads = self.num_attention_heads,
                 key_dim = self.attention_dim, 
                 value_dim = self.attention_dim,
-                output_shape = (self.token_dim)
             )(x, x, attention_mask = self.attention_mask)
-            x = layers.Add()([x, att])
+
+            print("att shape", att.shape)
+            
+            x = x + att
             x = layers.LayerNormalization()(x)
 
             ff = layers.Dense(
                 units = self.feed_forward_dim, 
                 activation = self.activation
             )(x)
+
+            print("ff shape", ff.shape)
             
             ff = layers.Dense(
                 units = self.token_dim, 
                 activation = self.activation
             )(ff)
             
-            x = layers.Add()([x, ff])
+            x = x + ff
             x = layers.LayerNormalization()(x)
         
         x = layers.Dense(
