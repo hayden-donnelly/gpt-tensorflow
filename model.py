@@ -49,20 +49,12 @@ class gpt(keras.Model):
             output_dim = self.token_dim
         )(inputs)
 
-        print("token_embed shape", token_embed.shape)
-
         positional_embed = layers.Embedding(
             input_dim = self.context_size, 
             output_dim = self.token_dim
         )(np.arange(self.context_size))
 
-        print("positional_embed shape", positional_embed.shape)
-
-        print("added shape", (token_embed + positional_embed).shape)
-
         x = token_embed + positional_embed
-
-        print("x shape", x.shape)
 
         for _ in range(self.num_blocks):
             att = layers.MultiHeadAttention(
@@ -70,8 +62,6 @@ class gpt(keras.Model):
                 key_dim = self.attention_dim, 
                 value_dim = self.attention_dim,
             )(x, x, attention_mask = self.attention_mask)
-
-            print("att shape", att.shape)
             
             x = x + att
             x = layers.LayerNormalization()(x)
@@ -80,8 +70,6 @@ class gpt(keras.Model):
                 units = self.feed_forward_dim, 
                 activation = self.activation
             )(x)
-
-            print("ff shape", ff.shape)
             
             ff = layers.Dense(
                 units = self.token_dim, 
