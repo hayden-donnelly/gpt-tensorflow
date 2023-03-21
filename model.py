@@ -112,7 +112,7 @@ def main():
     with open('tiny_shakespeare.txt', 'r', encoding='utf8') as f:
         text = f.read()
 
-    tokenized_text, token_dim = tokenize(text[:10000])
+    tokenized_text, token_dim = tokenize(text)
 
     print(tokenized_text[:10])
 
@@ -137,3 +137,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+        
