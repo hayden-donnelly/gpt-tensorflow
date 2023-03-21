@@ -7,6 +7,6 @@ Tensorflow implementation of the paper Improving Language Understanding by Gener
  @misc{radford_narasimhan_salimans_sutskever, 
     title={Improving language understanding by generative pre-training}, 
     author={Alec Radford and Karthik Narasimhan and Tim Salimans and Ilya Sutskever},
-    url={https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf}
+    url={https://openai.com/research/language-unsupervised}
 } 
 ```
