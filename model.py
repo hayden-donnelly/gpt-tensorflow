@@ -114,8 +114,6 @@ if __name__ == '__main__':
 
     tokenized_text, token_dim = tokenize(text)
 
-    print(tokenized_text[:10])
-
     model = gpt(
         num_blocks = 12,
         num_attention_heads = 12,
@@ -126,15 +124,29 @@ if __name__ == '__main__':
         token_dim = token_dim
     )
 
-    input_tokens = np.array(tokenized_text).reshape(len(tokenized_text), 512)
-    one_hot_labels = np.array(
-        get_labels(tokenized_text, token_dim)
-    ).reshape(len(tokenized_text), 512, token_dim)
+    num_contexts = int(len(tokenized_text) / model.context_size)
+    num_tokens = num_contexts * model.context_size
 
+    input_tokens = np.array(
+        tokenized_text[:num_tokens]
+    ).reshape(num_contexts, model.context_size)
     print("input tokens shape:", input_tokens.shape)
+
+    one_hot_labels = np.array(
+        get_labels(tokenized_text, token_dim)[:num_tokens]
+    ).reshape(num_contexts, 512, token_dim)
     print("labels shape:", one_hot_labels.shape)
 
-    model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics=['accuracy'])
-    #model.train_on_batch(input_tokens, one_hot_labels)
-    model.fit(x = input_tokens, y = one_hot_labels, epochs = 1, batch_size = 1)
+    model.compile(
+        optimizer = 'adam', 
+        loss = 'categorical_crossentropy', 
+        metrics=['accuracy']
+    )
+
+    model.fit(
+        x = input_tokens, 
+        y = one_hot_labels, 
+        epochs = 1, 
+        batch_size = 1
+    )
         
