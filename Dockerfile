@@ -8,4 +8,6 @@ RUN apt-get -y install git
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-COPY . .
+COPY . ./gpt-tensorflow
+
+cmd ["python", "-m", "spacy", "download", "en_core_web_sm"]
