@@ -126,12 +126,15 @@ if __name__ == '__main__':
         token_dim = token_dim
     )
 
-    input_tokens = np.array(tokenized_text[:512]).reshape(1, 512)
+    input_tokens = np.array(tokenized_text).reshape(len(tokenized_text), 512)
     one_hot_labels = np.array(
-        get_labels(tokenized_text, token_dim)[:512]
-    ).reshape(1, 512, token_dim)
-    print(one_hot_labels.shape)
+        get_labels(tokenized_text, token_dim)
+    ).reshape(len(tokenized_text), 512, token_dim)
 
-    model.compile(optimizer = 'adam', loss = 'categorical_crossentropy')
-    model.train_on_batch(input_tokens, one_hot_labels)
+    print("input tokens shape:", input_tokens.shape)
+    print("labels shape:", one_hot_labels.shape)
+
+    model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics=['accuracy'])
+    #model.train_on_batch(input_tokens, one_hot_labels)
+    model.fit(x = input_tokens, y = one_hot_labels, epochs = 1, batch_size = 1)
         
