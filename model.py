@@ -108,7 +108,7 @@ def get_labels(tokens, token_dim):
 
     return labels
 
-def main():
+if __name__ == '__main__':
     with open('tiny_shakespeare.txt', 'r', encoding='utf8') as f:
         text = f.read()
 
@@ -134,7 +134,4 @@ def main():
 
     model.compile(optimizer = 'adam', loss = 'categorical_crossentropy')
     model.train_on_batch(input_tokens, one_hot_labels)
-
-if __name__ == '__main__':
-    main()
         
