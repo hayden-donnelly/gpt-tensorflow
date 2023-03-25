@@ -109,7 +109,7 @@ def get_labels(tokens, token_dim):
     return labels
 
 if __name__ == '__main__':
-    with open('tiny_shakespeare.txt', 'r', encoding='utf8') as f:
+    with open('data/tiny_shakespeare.txt', 'r', encoding='utf8') as f:
         text = f.read()
 
     tokenized_text, token_dim = tokenize(text)

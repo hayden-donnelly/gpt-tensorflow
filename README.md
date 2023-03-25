@@ -1,7 +1,7 @@
 # gpt-tensorflow
 Tensorflow implementation of the paper Improving Language Understanding by Generative Pre-Training.
 
-<img src="./gpt-architecture.png" width="270px"></img>
+<img src="./images/gpt-architecture.png" width="270px"></img>
 
 ## Setup Guide
 
