@@ -7,22 +7,26 @@ class GPT(keras.Model):
     def __init__(
         self, 
         num_blocks, 
-        token_dim, 
+        token_embed_dim, 
         num_attention_heads, 
         attention_dim, 
         feed_forward_dim, 
         context_size, 
-        activation
+        activation,
+        dropout,
+        vocab_size
     ):
         super().__init__()
         self.num_blocks = num_blocks
-        self.token_dim = token_dim
+        self.token_embed_dim = token_embed_dim
         self.num_attention_heads = num_attention_heads
         self.attention_dim = attention_dim
         self.feed_forward_dim = feed_forward_dim
         self.context_size = context_size
         self.activation = activation
         self.attention_mask = np.tril(np.ones((context_size, context_size)), 0)
+        self.dropout = dropout
+        self.vocab_size = vocab_size
         self.network = self.create_network()
 
     def train_step(self, data):
@@ -40,13 +44,13 @@ class GPT(keras.Model):
     def create_network(self):
         inputs = layers.Input((self.context_size))
         token_embed = layers.Embedding(
-            input_dim = self.token_dim, 
-            output_dim = self.token_dim
+            input_dim = self.vocab_size, 
+            output_dim = self.token_embed_dim
         )(inputs)
 
         positional_embed = layers.Embedding(
             input_dim = self.context_size, 
-            output_dim = self.token_dim
+            output_dim = self.token_embed_dim
         )(np.arange(self.context_size))
 
         x = token_embed + positional_embed
@@ -57,8 +61,10 @@ class GPT(keras.Model):
                 key_dim = self.attention_dim, 
                 value_dim = self.attention_dim,
             )(x, x, attention_mask = self.attention_mask)
+            att = layers.Dropout(self.dropout)(att)
             
             x = x + att
+            x = layers.Dropout(self.dropout)(x)
             x = layers.LayerNormalization()(x)
 
             ff = layers.Dense(
@@ -67,15 +73,16 @@ class GPT(keras.Model):
             )(x)
             
             ff = layers.Dense(
-                units = self.token_dim, 
+                units = self.token_embed_dim, 
                 activation = self.activation
             )(ff)
             
             x = x + ff
+            x = layers.Dropout(self.dropout)(x)
             x = layers.LayerNormalization()(x)
         
         x = layers.Dense(
-            units = self.token_dim, 
+            units = self.vocab_size, 
             activation = 'softmax'
         )(x)
 

@@ -3,6 +3,8 @@ import numpy as np
 from model import GPT
 import spacy
 
+use_spacy = True
+
 # Spacy tokenization.
 def spacy_tokenize(text):
     nlp = spacy.load('en_core_web_sm')
@@ -45,8 +47,10 @@ if __name__ == '__main__':
     with open('../data/tiny_shakespeare.txt', 'r', encoding='utf8') as f:
         text = f.read()
 
-    #tokenized_text, token_dim = spacy_tokenize(text)
-    tokenized_text, token_dim = character_tokenize(text)
+    if use_spacy:
+        tokenized_text, token_dim = spacy_tokenize(text)
+    else:
+        tokenized_text, vocab_size = character_tokenize(text)
 
     model = GPT(
         num_blocks = 12,
@@ -55,7 +59,9 @@ if __name__ == '__main__':
         attention_dim = 768,
         feed_forward_dim = 3072,
         activation = 'gelu',
-        token_dim = token_dim
+        token_embed_dim = 384,
+        dropout = 0.1,
+        vocab_size = vocab_size
     )
 
     num_contexts = int(len(tokenized_text) / model.context_size)
@@ -64,12 +70,12 @@ if __name__ == '__main__':
     input_tokens = np.array(
         tokenized_text[:num_tokens]
     ).reshape(num_contexts, model.context_size)
-    print("input tokens shape:", input_tokens.shape)
+    print("Inputs shape:", input_tokens.shape)
 
     one_hot_labels = np.array(
-        get_labels(tokenized_text, token_dim)[:num_tokens]
-    ).reshape(num_contexts, 512, token_dim)
-    print("labels shape:", one_hot_labels.shape)
+        get_labels(tokenized_text, vocab_size)[:num_tokens]
+    ).reshape(num_contexts, 512, vocab_size)
+    print("Labels shape:", one_hot_labels.shape)
 
     model.compile(
         optimizer = 'adam', 
@@ -81,5 +87,6 @@ if __name__ == '__main__':
         x = input_tokens, 
         y = one_hot_labels, 
         epochs = 1, 
-        batch_size = 1
+        batch_size = 1,
+        verbose = 1
     )
