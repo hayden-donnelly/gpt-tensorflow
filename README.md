@@ -3,31 +3,10 @@ Tensorflow implementation of the paper Improving Language Understanding by Gener
 
 <img src="./images/gpt-architecture.png" width="270px"></img>
 
-## Setup Guide
+## Training in Docker container
 
-Build docker image
 ```
-docker build <path_to_this_folder>
-```
-
-Run docker container
-```
-docker run -it --gpus all <image_id>
-```
-
-Download Spacy model
-```
-python -m spacy download en_core_web_sm
-```
-
-CD into the project folder
-```
-cd gpt-tensorflow
-```
-
-Start training
-```
-python scripts/model.py
+docker-compose up --build gpt-tensorflow
 ```
 
 ## Citations
