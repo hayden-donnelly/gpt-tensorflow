@@ -3,7 +3,7 @@ Tensorflow implementation of the paper Improving Language Understanding by Gener
 
 <img src="./images/gpt-architecture.png" width="270px"></img>
 
-# Tokenization
+## Tokenization
 
 The train.py script offers two different tokenization schemes: spacy tokenization, and character-wise tokenization.
 Spacy tokenization is the default, and also the one used in the original paper. However, due to the large vocabulary
