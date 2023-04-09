@@ -23,7 +23,7 @@ docker-compose up -d
 
 Opening a shell in container:
 ```
-docker-compose exec app bash
+docker-compose exec gpt-tensorflow bash
 ```
 
 Instead of opening a shell, you can also go to http://localhost:8888/ to access a Jupyter Lab instance running inside the container.
