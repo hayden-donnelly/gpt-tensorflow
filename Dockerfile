@@ -1,6 +1,6 @@
 FROM tensorflow/tensorflow:latest-gpu
 
-WORKDIR .
+WORKDIR /project
 COPY requirements.txt requirements.txt
 
 RUN apt-get -y update
@@ -11,6 +11,6 @@ RUN pip install -r requirements.txt
 
 RUN python -m spacy download en_core_web_sm
 
-COPY . .
+EXPOSE 8888
 
-CMD ["python", "scripts/train.py"]
+ENTRYPOINT ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--NotebookApp.token=''", "--NotebookApp.password=''"]

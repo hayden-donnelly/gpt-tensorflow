@@ -10,10 +10,27 @@ Spacy tokenization is the default, and also the one used in the original paper. 
 size it generates, it may be too memory intensive for some machines. In this case, character-wise tokenization can be used.
 To switch to character-wise tokenization, set ``use_spacy`` to false in train.py.
 
-## Training in Docker container
-
+## Docker Environment
+Building image:
 ```
-docker-compose up --build gpt-tensorflow
+docker-compose build
+```
+
+Starting container/environment:
+```
+docker-compose up -d
+```
+
+Opening a shell in container:
+```
+docker-compose exec app bash
+```
+
+Instead of opening a shell, you can also go to http://localhost:8888/ to access a Jupyter Lab instance running inside the container.
+
+Stopping container/environment:
+```
+docker-compose down
 ```
 
 ## Citations
