@@ -1,8 +1,7 @@
 import tensorflow as tf
 import numpy as np
 from model import GPT
-import tokenize as tk
-
+import tokenizer as tk
 # Configurable parameters.
 use_spacy = True
 num_blocks = 12
@@ -26,9 +25,9 @@ if __name__ == '__main__':
         text = f.read()
 
     if use_spacy:
-        tokenized_text, vocab_size = tk.spacy_tokenize(text)
+        tokenized_text, vocab_size, encoding_map, decoding_map = tk.spacy_tokenize(text)
     else:
-        tokenized_text, vocab_size = tk.character_tokenize(text)
+        tokenized_text, vocab_size, encoding_map, decoding_map = tk.character_tokenize(text)
 
     model = GPT(
         num_blocks = num_blocks,
