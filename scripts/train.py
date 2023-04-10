@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 from model import GPT
 import tokenizer as tk
+
 # Configurable parameters.
 use_spacy = True
 num_blocks = 12
