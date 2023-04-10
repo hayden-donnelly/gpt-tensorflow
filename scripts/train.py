@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 from model import GPT
-import spacy
+import tokenize as tk
 
 # Configurable parameters.
 use_spacy = True
@@ -19,53 +19,16 @@ batch_size = 1
 # Overrides parameters from command line.
 exec(open('configurator.py').read())
 
-# Spacy tokenization.
-def spacy_tokenize(text):
-    nlp = spacy.load('en_core_web_sm')
-    nlp.max_length = 2000000
-    doc = nlp(text)
-
-    token_ids = []
-    id_map = {}
-    for token in doc:
-        if token.text not in id_map:
-            id_map[token.text] = len(id_map)
-        token_id = id_map[token.text]
-        token_ids.append(token_id)
-
-    return token_ids, len(id_map)
-
-# Character-wise tokenization.
-def character_tokenize(text):
-    characters = set(text)
-    character_map = {}
-    for character in characters:
-        character_map[character] = len(character_map)
-
-    token_ids = []
-    for character in text:
-        token_ids.append(character_map[character])
-
-    return token_ids, len(character_map)
-
-def get_labels(tokens, token_dim):
-    labels = []
-    for i in range(len(tokens)):
-        labels.append(tf.one_hot(indices = [i], depth = token_dim))
-
-    return labels
-
 if __name__ == '__main__':
-    print(batch_size)
     print(tf.config.list_physical_devices())
 
     with open('../data/tiny_shakespeare.txt', 'r', encoding='utf8') as f:
         text = f.read()
 
     if use_spacy:
-        tokenized_text, token_dim = spacy_tokenize(text)
+        tokenized_text, vocab_size = tk.spacy_tokenize(text)
     else:
-        tokenized_text, vocab_size = character_tokenize(text)
+        tokenized_text, vocab_size = tk.character_tokenize(text)
 
     model = GPT(
         num_blocks = num_blocks,
@@ -88,8 +51,8 @@ if __name__ == '__main__':
     print("Inputs shape:", input_tokens.shape)
 
     one_hot_labels = np.array(
-        get_labels(tokenized_text, vocab_size)[:num_tokens]
-    ).reshape(num_contexts, 512, vocab_size)
+        tk.tokens_to_labels(tokenized_text, vocab_size)[:num_tokens]
+    ).reshape(num_contexts, context_size, vocab_size)
     print("Labels shape:", one_hot_labels.shape)
 
     model.compile(
@@ -105,3 +68,5 @@ if __name__ == '__main__':
         batch_size = batch_size,
         verbose = 1
     )
+
+    model.network.save('../data/output/gpt')
