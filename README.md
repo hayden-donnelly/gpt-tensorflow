@@ -5,10 +5,10 @@ Tensorflow implementation of the paper "Improving Language Understanding by Gene
 
 ## Tokenization
 
-The ``train.py`` script offers two different tokenization schemes: spacy tokenization, and character-wise tokenization.
+The ``tokenizer.py`` script offers two different tokenization schemes: spacy tokenization, and character-wise tokenization.
 Spacy tokenization is the default, and also the one used in the original paper. However, due to the large vocabulary
 size it generates, it may be too memory intensive for some machines. In this case, character-wise tokenization can be used.
-To switch to character-wise tokenization, set ``use_spacy`` to false in train.py.
+To switch to character-wise tokenization, call ``tokenizer.py`` with the argument ``use_spacy=False``.
 
 ## Docker Environment
 Building image:
