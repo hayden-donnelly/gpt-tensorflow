@@ -45,7 +45,7 @@ def character_tokenize(text):
 def tokens_to_labels(tokens, vocab_size):
     labels = []
     for i in range(len(tokens)):
-        labels.append(tf.one_hot(indices = [i], depth = vocab_size))
+        labels.append(tf.one_hot(indices = [i], depth = vocab_size).numpy().tolist())
 
     return labels
 
@@ -79,5 +79,10 @@ if __name__ == "__main__":
     with open('../data/preprocessed/vocab.json', 'w') as vocab_file:
         vocab_file.write(json.dumps(vocab))
 
-    with open('../data/preprocessed/tokenized_text.txt', 'w') as tokenize_text_file:
-        tokenize_text_file.write(str(tokenized_text))
+    preprocessed_data = {
+        'tokenized_text': tokenized_text,
+        'labels': tokens_to_labels(tokenized_text, vocab_size)
+    }
+
+    with open('../data/preprocessed/preprocessed_data.json', 'w') as preprocessed_file:
+        preprocessed_file.write(json.dumps(preprocessed_data))
