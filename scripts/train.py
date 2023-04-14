@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 from model import GPT
 import tokenizer as tk
+import json
 
 # Configurable parameters.
 use_spacy = True
@@ -22,13 +23,14 @@ exec(open('configurator.py').read())
 if __name__ == '__main__':
     print(tf.config.list_physical_devices())
 
-    with open('../data/tiny_shakespeare.txt', 'r', encoding='utf8') as f:
-        text = f.read()
+    with open('../data/vocab.json', 'r') as f:
+        vocab = json.load(f)
+        vocab_size = len(vocab)
 
-    if use_spacy:
-        tokenized_text, vocab_size, encoding_map, decoding_map = tk.spacy_tokenize(text)
-    else:
-        tokenized_text, vocab_size, encoding_map, decoding_map = tk.character_tokenize(text)
+    with open('../date/prepocessed/preprocessed_data.json', 'r') as f:
+        data = json.load(f)
+        tokenized_text = data['tokenized_text']
+        labels = data['labels']
 
     model = GPT(
         num_blocks = num_blocks,
