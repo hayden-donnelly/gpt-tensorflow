@@ -38,7 +38,7 @@ Full list of parameters:
 - ``--context_size`` : Number of tokens in each context. Default: ``512``
 - ``--attention_dim`` : Dimension of attention layers. Default: ``768``
 - ``--feed_forward_dim`` : Dimension of feed forward layers. Default: ``3072``
-- ``--activation`` : Activation function. Default: ``gelu`
+- ``--activation`` : Activation function. Default: ``gelu``
 - ``--token_embed_dim`` : Dimension of token embeddings. Default: ``384``
 - ``--dropout`` : Dropout rate. Default: ``0.1``
 - ``--epochs`` : Number of epochs. Default: ``100``
