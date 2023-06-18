@@ -1,6 +1,8 @@
 # gpt-tensorflow
 Tensorflow implementation of the paper "Improving Language Understanding by Generative Pre-Training," AKA, the original GPT paper.
 
+This code is based on my interpretation of the paper. You can find the authors' original code [here](https://github.com/openai/finetune-transformer-lm).
+
 <img src="./images/gpt-architecture.png" width="270px"></img>
 
 ## Tokenization
