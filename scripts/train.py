@@ -24,19 +24,19 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     help_text = 'If true, use Spacy tokenizer instead of character wise tokenization.'
     parser.add_argument('--use_spacy', type=bool, default=use_spacy, help=help_text)
-    help_text = 'Number of blocks in transformer blocks.'
+    help_text = 'Number of transformer blocks.'
     parser.add_argument('--num_blocks', type=int, default=num_blocks, help=help_text)
     help_text = 'Number of attention heads in multi-head attention.'
     parser.add_argument('--num_attention_heads', type=int, default=num_attention_heads, help=help_text)
     help_text = 'Number of tokens in each context.'
     parser.add_argument('--context_size', type=int, default=context_size, help=help_text)
-    help_text = 'Dimension of attention layer.'
+    help_text = 'Dimension of attention layers.'
     parser.add_argument('--attention_dim', type=int, default=attention_dim, help=help_text)
-    help_text = 'Dimension of feed forward layer.'
+    help_text = 'Dimension of feed forward layers.'
     parser.add_argument('--feed_forward_dim', type=int, default=feed_forward_dim, help=help_text)
-    help_text = 'Activation function for feed forward layer.'
+    help_text = 'Activation function.'
     parser.add_argument('--activation', type=str, default=activation, help=help_text)
-    help_text = 'Dimension of token embedding.'
+    help_text = 'Dimension of token embeddings.'
     parser.add_argument('--token_embed_dim', type=int, default=token_embed_dim, help=help_text)
     help_text = 'Dropout rate.'
     parser.add_argument('--dropout', type=float, default=dropout, help=help_text)
