@@ -36,8 +36,8 @@ Full list of parameters:
 - ``--activation`` : Activation function. Default: gelu
 - ``--token_embed_dim`` : Dimension of token embeddings. Default: 384
 - ``--dropout`` : Dropout rate. Default: 0.1
-- ``epochs`` : Number of epochs. Default: 1
-- ``batch_size`` : Batch size. Default: 1
+- ``--epochs`` : Number of epochs. Default: 1
+- ``--batch_size`` : Batch size. Default: 1
 
 ## Docker Environment
 Building image:
