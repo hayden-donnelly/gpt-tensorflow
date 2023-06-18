@@ -15,8 +15,8 @@ To switch to character-wise tokenization, call ``tokenizer.py`` with the argumen
 Example: ``python tokenizer.py --use_spacy False``
 
 Full list of parameters:
-- ``--use_spacy``: If true, use Spacy tokenizer instead of character wise tokenization. Default: True
-- ``--text_path``: Path to text file to be tokenized. Default: ../data/tiny_shakespeare.txt
+- ``--use_spacy`` : If true, use Spacy tokenizer instead of character wise tokenization. Default: True
+- ``--text_path`` : Path to text file to be tokenized. Default: ../data/tiny_shakespeare.txt
 
 ## Training 
 
@@ -26,18 +26,18 @@ Example: ``python train.py --attention_dim 512``
 
 Full list of parameters:
 
-- ``--use_spacy``: If true, use Spacy tokenizer instead of character wise tokenization. Default: True
-- ``--num_blocks``: Number of transformer blocks. Default: 12
-- ``--num_blocks``: Number of transformer blocks. Default: 12
-- ``--num_attention_heads``: Number of attention heads in multi-head attention. Default: 12
-- ``--context_size``: Number of tokens in each context. Default: 512
-- ``--attention_dim``: Dimension of attention layers. Default: 768
-- ``--feed_forward_dim``: Dimension of feed forward layers. Default: 3072
-- ``--activation``: Activation function. Default: gelu
-- ``--token_embed_dim``: Dimension of token embeddings. Default: 384
-- ``--dropout``: Dropout rate. Default: 0.1
-- ``epochs``: Number of epochs. Default: 1
-- ``batch_size``: Batch size. Default: 1
+- ``--use_spacy`` : If true, use Spacy tokenizer instead of character wise tokenization. Default: True
+- ``--num_blocks`` : Number of transformer blocks. Default: 12
+- ``--num_blocks`` : Number of transformer blocks. Default: 12
+- ``--num_attention_heads`` : Number of attention heads in multi-head attention. Default: 12
+- ``--context_size`` : Number of tokens in each context. Default: 512
+- ``--attention_dim`` : Dimension of attention layers. Default: 768
+- ``--feed_forward_dim`` : Dimension of feed forward layers. Default: 3072
+- ``--activation`` : Activation function. Default: gelu
+- ``--token_embed_dim`` : Dimension of token embeddings. Default: 384
+- ``--dropout`` : Dropout rate. Default: 0.1
+- ``epochs`` : Number of epochs. Default: 1
+- ``batch_size`` : Batch size. Default: 1
 
 ## Docker Environment
 Building image:
