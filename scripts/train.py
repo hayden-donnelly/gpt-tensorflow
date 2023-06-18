@@ -15,8 +15,8 @@ feed_forward_dim = 3072
 activation = 'gelu'
 token_embed_dim = 384
 dropout = 0.1
-epochs = 1
-batch_size = 1
+epochs = 100
+batch_size = 64
 
 if __name__ == '__main__':
     print('Available devices:', tf.config.list_physical_devices())

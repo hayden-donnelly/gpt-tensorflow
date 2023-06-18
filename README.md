@@ -34,7 +34,6 @@ Full list of parameters:
 
 - ``--use_spacy`` : If true, use Spacy tokenizer instead of character wise tokenization. Default: ``True``
 - ``--num_blocks`` : Number of transformer blocks. Default: ``12``
-- ``--num_blocks`` : Number of transformer blocks. Default: ``12``
 - ``--num_attention_heads`` : Number of attention heads in multi-head attention. Default: ``12``
 - ``--context_size`` : Number of tokens in each context. Default: ``512``
 - ``--attention_dim`` : Dimension of attention layers. Default: ``768``
@@ -42,8 +41,20 @@ Full list of parameters:
 - ``--activation`` : Activation function. Default: ``gelu`
 - ``--token_embed_dim`` : Dimension of token embeddings. Default: ``384``
 - ``--dropout`` : Dropout rate. Default: ``0.1``
-- ``--epochs`` : Number of epochs. Default: ``1``
-- ``--batch_size`` : Batch size. Default: ``1``
+- ``--epochs`` : Number of epochs. Default: ``100``
+- ``--batch_size`` : Batch size. Default: ``64``
+
+For training on a single consumer grade GPU, you'll need to nerf the model a bit. Below are two different configurations that work on an RTX 3070 Ti.
+
+Nerfed batch size (slow training, but model parameters are the same as in the original paper):
+```
+python train.py --batch_size 1 --epochs 1
+```
+
+Nerfed model (faster training, but model parameters are different from the original paper):
+```
+python train.py --use_spacy False --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024
+```
 
 ## Docker Environment
 Building image:
