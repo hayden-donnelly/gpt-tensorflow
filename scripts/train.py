@@ -3,6 +3,7 @@ import numpy as np
 from model import GPT
 import tokenizer as tk
 import json
+import argparse
 
 # Configurable parameters.
 use_spacy = True
@@ -17,20 +18,45 @@ dropout = 0.1
 epochs = 1
 batch_size = 1
 
-# Overrides parameters from command line.
-exec(open('configurator.py').read())
-
 if __name__ == '__main__':
-    print(tf.config.list_physical_devices())
+    print('Available devices:', tf.config.list_physical_devices())
 
-    with open('../data/vocab.json', 'r') as f:
+    parser = argparse.ArgumentParser()
+    help_text = 'If true, use Spacy tokenizer instead of character wise tokenization.'
+    parser.add_argument('--use_spacy', type=bool, default=use_spacy, help=help_text)
+    help_text = 'Number of blocks in transformer blocks.'
+    parser.add_argument('--num_blocks', type=int, default=num_blocks, help=help_text)
+    help_text = 'Number of attention heads in multi-head attention.'
+    parser.add_argument('--num_attention_heads', type=int, default=num_attention_heads, help=help_text)
+    help_text = 'Number of tokens in each context.'
+    parser.add_argument('--context_size', type=int, default=context_size, help=help_text)
+    help_text = 'Dimension of attention layer.'
+    parser.add_argument('--attention_dim', type=int, default=attention_dim, help=help_text)
+    help_text = 'Dimension of feed forward layer.'
+    parser.add_argument('--feed_forward_dim', type=int, default=feed_forward_dim, help=help_text)
+    help_text = 'Activation function for feed forward layer.'
+    parser.add_argument('--activation', type=str, default=activation, help=help_text)
+    help_text = 'Dimension of token embedding.'
+    parser.add_argument('--token_embed_dim', type=int, default=token_embed_dim, help=help_text)
+    help_text = 'Dropout rate.'
+    parser.add_argument('--dropout', type=float, default=dropout, help=help_text)
+    help_text = 'Number of epochs.'
+    parser.add_argument('--epochs', type=int, default=epochs, help=help_text)
+    help_text = 'Batch size.'
+    parser.add_argument('--batch_size', type=int, default=batch_size, help=help_text)
+    args = parser.parse_args()
+
+    with open ('../data/preprocessed/vocab.json', 'r') as f:
         vocab = json.load(f)
-        vocab_size = len(vocab)
+    vocab_size = vocab['vocab_size']
+    
+    with open('../data/tiny_shakespeare.txt', 'r', encoding='utf8') as f:
+        text = f.read()
 
-    with open('../date/prepocessed/preprocessed_data.json', 'r') as f:
-        data = json.load(f)
-        tokenized_text = data['tokenized_text']
-        labels = data['labels']
+    if args.use_spacy:
+        tokenized_text = tk.spacy_tokenize(text)
+    else:
+        tokenized_text = tk.character_tokenize(text)
 
     model = GPT(
         num_blocks = num_blocks,

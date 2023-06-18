@@ -42,6 +42,16 @@ def character_tokenize(text):
 
     return token_ids, len(encoding_map), encoding_map, decoding_map
 
+def tokenize_from_map(text, encoding_map):
+    tokens = []
+    start_index = 0
+    for i in range(len(text)):
+        current_selection = text[start_index : i + 1]
+        if(current_selection in encoding_map.keys()):
+            start_index = i + 1
+            tokens.append(encoding_map[current_selection])
+    return tokens
+
 def tokens_to_labels(tokens, vocab_size):
     labels = []
     for i in range(len(tokens)):
@@ -52,7 +62,7 @@ def tokens_to_labels(tokens, vocab_size):
 def labels_to_tokens(labels):
     tokens = []
     for i in range(len(labels)):
-        tokens.append(tf.argmax(labels[i]), axis = 1)
+        tokens.append(tf.argmax(labels[i]))
     return tokens
 
 def tokens_to_string(tokens, vocab):
@@ -71,18 +81,20 @@ if __name__ == "__main__":
         tokenized_text, vocab_size, encoding_map, decoding_map = character_tokenize(text)
 
     vocab = {
+        'spacy': use_spacy,
         'vocab_size': vocab_size, 
         'encoding_map': encoding_map, 
         'decoding_map': decoding_map
     }
 
     with open('../data/preprocessed/vocab.json', 'w') as vocab_file:
-        vocab_file.write(json.dumps(vocab))
+        vocab_file.write(json.dumps(vocab, indent = 4))
 
     preprocessed_data = {
+        'spacy': use_spacy,
         'tokenized_text': tokenized_text,
         'labels': tokens_to_labels(tokenized_text, vocab_size)
     }
 
     with open('../data/preprocessed/preprocessed_data.json', 'w') as preprocessed_file:
-        preprocessed_file.write(json.dumps(preprocessed_data))
+        preprocessed_file.write(json.dumps(preprocessed_data, indent = 4))
