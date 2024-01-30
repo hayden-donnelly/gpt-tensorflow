@@ -6,7 +6,7 @@ import json
 import argparse
 import os
 
-if __name__ == '__main__':
+def main():
     print('Available devices:', tf.config.list_physical_devices())
 
     parser = argparse.ArgumentParser()
@@ -89,3 +89,6 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     model.network.save(os.path.join(output_dir, 'gpt'))
+
+if __name__ == '__main__:
+    main()
