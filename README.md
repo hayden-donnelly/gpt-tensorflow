@@ -1,7 +1,9 @@
 # gpt-tensorflow
 A Tensorflow implementation of the original GPT.
 
-This code is based on my interpretation of the paper. You can find the authors' original code [here](https://github.com/openai/finetune-transformer-lm). Note I have omitted downstream finetuning in this implementation.
+This code is based on my interpretation of the paper. You can find the authors' original code 
+[here](https://github.com/openai/finetune-transformer-lm). Note that I have omitted downstream 
+finetuning in this implementation.
 
 <img src="./images/gpt-architecture.png" width="270px"></img>
 
@@ -10,7 +12,7 @@ This code is based on my interpretation of the paper. You can find the authors' 
 The ``tokenizer.py`` script offers two different tokenization schemes: spacy tokenization, and character-wise tokenization.
 Spacy tokenization is the default, and also the one used in the original paper. However, due to the large vocabulary
 size it generates, it may be too memory intensive for some machines. In this case, character-wise tokenization can be used.
-To switch to character-wise tokenization, call ``tokenizer.py`` with the argument ``--use_spacy False``.
+To switch to character-wise tokenization, call ``tokenizer.py`` with the argument ``--no_spacy``.
 
 Example: 
 ```
@@ -18,7 +20,7 @@ python tokenizer.py --use_spacy False
 ```
 
 Full list of parameters:
-- ``--use_spacy`` : If true, use Spacy tokenizer instead of character wise tokenization. Default: ``True``
+- ``--no_spacy`` : Use character wise tokenizer instead of Spacy tokenizer.
 - ``--text_path`` : Path to text file to be tokenized. Default: ``../data/tiny_shakespeare.txt``
 
 ## Training 
@@ -32,7 +34,7 @@ python train.py --attention_dim 512
 
 Full list of parameters:
 
-- ``--use_spacy`` : If true, use Spacy tokenizer instead of character wise tokenization. Default: ``True``
+- ``--no_spacy`` : Use character wise tokenizer instead of Spacy tokenizer.
 - ``--num_blocks`` : Number of transformer blocks. Default: ``12``
 - ``--num_attention_heads`` : Number of attention heads in multi-head attention. Default: ``12``
 - ``--context_size`` : Number of tokens in each context. Default: ``512``
@@ -53,7 +55,7 @@ python train.py --batch_size 1 --epochs 1
 
 Nerfed model (faster training, but model parameters are different from the original paper):
 ```
-python train.py --use_spacy False --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024
+python train.py --no_spacy --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024
 ```
 
 ## Docker Environment

@@ -4,7 +4,6 @@ import json
 import argparse
 
 # Configurable parameters.
-use_spacy = True
 text_path = '../data/tiny_shakespeare.txt'
 
 # Spacy tokenization.
@@ -71,21 +70,21 @@ def tokens_to_string(tokens, vocab):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    help_text = 'If true, use Spacy tokenizer instead of character wise tokenization.'
-    parser.add_argument('--use_spacy', type=bool, default=use_spacy, help=help_text)
+    help_text = 'Use character wise tokenizer instear of Spacy tokenizer.'
+    parser.add_argument('--no_spacy', action='store_true', help=help_text)
     help_text = 'Path to text file to be tokenized.'
     parser.add_argument('--text_path', type=str, default=text_path, help=help_text)
 
     with open(text_path, 'r', encoding='utf8') as f:
         text = f.read()
 
-    if use_spacy:
-        tokenized_text, vocab_size, encoding_map, decoding_map = spacy_tokenize(text)
-    else:
+    if args.no_spacy:
         tokenized_text, vocab_size, encoding_map, decoding_map = character_tokenize(text)
+    else:
+        tokenized_text, vocab_size, encoding_map, decoding_map = spacy_tokenize(text)
 
     vocab = {
-        'spacy': use_spacy,
+        'spacy': args.no_spacy,
         'vocab_size': vocab_size, 
         'encoding_map': encoding_map, 
         'decoding_map': decoding_map
@@ -95,7 +94,7 @@ if __name__ == "__main__":
         vocab_file.write(json.dumps(vocab, indent = 4))
 
     preprocessed_data = {
-        'spacy': use_spacy,
+        'spacy': args.no_spacy,
         'tokenized_text': tokenized_text,
         'labels': tokens_to_labels(tokenized_text, vocab_size)
     }

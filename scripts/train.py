@@ -22,8 +22,8 @@ if __name__ == '__main__':
     print('Available devices:', tf.config.list_physical_devices())
 
     parser = argparse.ArgumentParser()
-    help_text = 'If true, use Spacy tokenizer instead of character wise tokenization.'
-    parser.add_argument('--use_spacy', type=bool, default=use_spacy, help=help_text)
+    help_text = 'Use character wise tokenizer instead of Spacy tokenizer.'
+    parser.add_argument('--no_spacy', type=bool, default=use_spacy, help=help_text)
     help_text = 'Number of transformer blocks.'
     parser.add_argument('--num_blocks', type=int, default=num_blocks, help=help_text)
     help_text = 'Number of attention heads in multi-head attention.'
@@ -53,10 +53,10 @@ if __name__ == '__main__':
     with open('../data/tiny_shakespeare.txt', 'r', encoding='utf8') as f:
         text = f.read()
 
-    if args.use_spacy:
-        tokenized_text = tk.spacy_tokenize(text)
-    else:
+    if args.no_spacy:
         tokenized_text = tk.character_tokenize(text)
+    else:
+        tokenized_text = tk.spacy_tokenize(text)
 
     model = GPT(
         num_blocks = num_blocks,
