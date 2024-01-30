@@ -37,7 +37,7 @@ if __name__ == '__main__':
     
     with open('data/preprocessed/preprocessed_data.json', 'r') as f:
         tokenized_text = json.load(f)['tokenized_text']
-
+    
     model = GPT(
         num_blocks = args.num_blocks,
         num_attention_heads = args.num_attention_heads,
@@ -55,15 +55,19 @@ if __name__ == '__main__':
     print('Context size:', args.context_size)
     print('Num contexts:', num_contexts)
     print('Num tokens:', num_tokens)
-
+    
+    print('Loading tokens... ', end='', flush=True)
     input_tokens = np.array(
         tokenized_text[:num_tokens]
     ).reshape(num_contexts, args.context_size)
+    print('DONE')
     print('Inputs shape:', input_tokens.shape)
-
+    
+    print('Converting tokens to one-hot labels... ', end='', flush=True)
     one_hot_labels = np.array(
         tk.tokens_to_labels(tokenized_text, vocab_size)[:num_tokens]
     ).reshape(num_contexts, args.context_size, vocab_size)
+    print('DONE')
     print('Labels shape:', one_hot_labels.shape)
 
     model.compile(
