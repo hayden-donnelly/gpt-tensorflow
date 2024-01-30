@@ -52,16 +52,19 @@ if __name__ == '__main__':
 
     num_contexts = int(len(tokenized_text) / args.context_size)
     num_tokens = num_contexts * args.context_size
+    print('Context size:', args.context_size)
+    print('Num contexts:', num_contexts)
+    print('Num tokens:', num_tokens)
 
     input_tokens = np.array(
         tokenized_text[:num_tokens]
     ).reshape(num_contexts, args.context_size)
-    print("Inputs shape:", input_tokens.shape)
+    print('Inputs shape:', input_tokens.shape)
 
     one_hot_labels = np.array(
         tk.tokens_to_labels(tokenized_text, vocab_size)[:num_tokens]
     ).reshape(num_contexts, args.context_size, vocab_size)
-    print("Labels shape:", one_hot_labels.shape)
+    print('Labels shape:', one_hot_labels.shape)
 
     model.compile(
         optimizer = 'adam', 
