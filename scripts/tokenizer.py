@@ -89,7 +89,7 @@ def main():
         'decoding_map': decoding_map
     }
     
-    vocab_dir = 'data/preprocessed/vocab.json'
+    vocab_dir = 'data/preprocessed'
     if not os.path.exists(vocab_dir):
         os.makedirs(vocab_dir)
     with open(os.path.join(vocab_dir, 'vocab.json'), 'w') as vocab_file:
@@ -101,7 +101,7 @@ def main():
         'labels': tokens_to_labels(tokenized_text, vocab_size)
     }
 
-    with open('data/preprocessed/preprocessed_data.json', 'w') as preprocessed_file:
+    with open(os.path.join(vocab_dir, 'preprocessed_data.json'), 'w') as preprocessed_file:
         preprocessed_file.write(json.dumps(preprocessed_data, indent = 4))
 
 if __name__ == "__main__":
