@@ -9,8 +9,6 @@ if __name__ == '__main__':
     print('Available devices:', tf.config.list_physical_devices())
 
     parser = argparse.ArgumentParser()
-    help_text = 'Use character wise tokenizer instead of Spacy tokenizer.'
-    parser.add_argument('--no_spacy', action='store_true', help=help_text)
     help_text = 'Number of transformer blocks.'
     parser.add_argument('--num_blocks', type=int, default=12, help=help_text)
     help_text = 'Number of attention heads in multi-head attention.'
@@ -33,17 +31,12 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=64, help=help_text)
     args = parser.parse_args()
 
-    with open ('../data/preprocessed/vocab.json', 'r') as f:
+    with open('data/preprocessed/vocab.json', 'r') as f:
         vocab = json.load(f)
     vocab_size = vocab['vocab_size']
     
-    with open('../data/tiny_shakespeare.txt', 'r', encoding='utf8') as f:
-        text = f.read()
-
-    if args.no_spacy:
-        tokenized_text = tk.character_tokenize(text)
-    else:
-        tokenized_text = tk.spacy_tokenize(text)
+    with open('data/preprocessed/preprocessed_data.json', 'r') as f:
+        tokenized_text = json.load(f)['tokenized_text']
 
     model = GPT(
         num_blocks = args.num_blocks,
@@ -84,4 +77,4 @@ if __name__ == '__main__':
         verbose = 1
     )
 
-    model.network.save('../data/output/gpt')
+    model.network.save('data/output/gpt')
