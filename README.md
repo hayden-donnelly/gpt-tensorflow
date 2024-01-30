@@ -1,7 +1,7 @@
 # gpt-tensorflow
-Tensorflow implementation of the original GPT from the paper "Improving Language Understanding by Generative Pre-Training."
+A Tensorflow implementation of the original GPT.
 
-This code is based on my interpretation of the paper. You can find the authors' original code [here](https://github.com/openai/finetune-transformer-lm).
+This code is based on my interpretation of the paper. You can find the authors' original code [here](https://github.com/openai/finetune-transformer-lm). Note I have omitted downstream finetuning in this implementation.
 
 <img src="./images/gpt-architecture.png" width="270px"></img>
 
@@ -79,7 +79,7 @@ Stopping container/environment:
 docker-compose down
 ```
 
-## Citations
+## Citation
 
 ```bibtex
 @misc{radford_narasimhan_salimans_sutskever, 
