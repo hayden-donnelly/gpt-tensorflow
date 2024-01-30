@@ -7,29 +7,65 @@ finetuning in this implementation.
 
 <img src="./images/gpt-architecture.png" width="270px"></img>
 
+## Script/Path Assumption
+All scripts assume that you will be running them from the root of this repository and will produce errors if
+they are not. For example, running ``python scripts/train.py`` from ``gpt-tensorflow`` will not produce errors,
+but running ``python train.py`` from ``gpt-tensorflow/scripts`` will. The same goes for any paths you specify
+in script arguments. For example, ``data/tiny_shakespeare.txt`` is correct while 
+``../data/tiny_shakespeare.txt`` is not.
+
+## Getting Started
+
+1. Build Docker image:
+```
+bash docker_build.sh
+```
+2. Start Docker container:
+```
+bash docker_run.sh
+```
+
+3. Tokenize text:
+```
+python scripts/tokenize.py --no_spacy --text_path data/tiny_shakespeare.txt
+```
+
+4. Train a model:
+```
+python scripts/train.py --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024 --batch_size 1
+```
+
+5. Sample the trained model (work in progress):
+```
+python scripts/sample.py
+```
+
 ## Tokenization
 
-The ``tokenizer.py`` script offers two different tokenization schemes: spacy tokenization, and character-wise tokenization.
-Spacy tokenization is the default, and also the one used in the original paper. However, due to the large vocabulary
-size it generates, it may be too memory intensive for some machines. In this case, character-wise tokenization can be used.
-To switch to character-wise tokenization, call ``tokenizer.py`` with the argument ``--no_spacy``.
+The ``tokenizer.py`` script offers two different tokenization schemes: spacy tokenization, and character-wise 
+tokenization. Spacy tokenization is the default, and also the one used in the original paper. However, due 
+to the large vocabulary size it generates, it may be too memory intensive for some machines. In this case, 
+character-wise tokenization can be used. To switch to character-wise tokenization, call ``tokenizer.py`` with 
+the argument ``--no_spacy``.
 
 Example: 
 ```
-python tokenizer.py --use_spacy False
+python scripts/tokenizer.py --no_spacy
 ```
 
 Full list of parameters:
 - ``--no_spacy`` : Use character wise tokenizer instead of Spacy tokenizer.
-- ``--text_path`` : Path to text file to be tokenized. Default: ``../data/tiny_shakespeare.txt``
+- ``--text_path`` : Path to text file to be tokenized. Default: ``data/tiny_shakespeare.txt``
 
 ## Training 
 
-To train the model, call ``train.py``. All of the model parameters will default to those outlined in the original paper, but you can override them by adding ``--<parameter_name> <parameter_value>`` arguments when calling ``train.py``. 
+To train the model, call ``scripts/train.py``. All of the model parameters will default to those 
+outlined in the original paper, but you can override them by adding ``--<parameter_name> <parameter_value>`` 
+arguments when calling ``scripts/train.py``. 
 
 Example: 
 ```
-python train.py --attention_dim 512
+python scripts/train.py --attention_dim 512
 ```
 
 Full list of parameters:
@@ -50,12 +86,12 @@ For training on a single consumer grade GPU, you'll need to nerf the model a bit
 
 Nerfed batch size (slow training, but model parameters are the same as in the original paper):
 ```
-python train.py --batch_size 1 --epochs 1
+python scripts/train.py --batch_size 1 --epochs 1
 ```
 
 Nerfed model (faster training, but model parameters are different from the original paper):
 ```
-python train.py --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024
+python scripts/train.py --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024
 ```
 
 ## Docker Container
