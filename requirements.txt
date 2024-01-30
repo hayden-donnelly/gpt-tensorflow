@@ -1,2 +1,2 @@
 spacy==3.5.1
-jupyterlab
+tensorflow

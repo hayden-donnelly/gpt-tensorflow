@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:latest-gpu
+FROM nvcr.io/nvidia/jax:23.10-py3
 
 WORKDIR /project
 COPY requirements.txt requirements.txt
