@@ -1,2 +1,2 @@
 spacy==3.5.1
-tensorflow
+tensorflow==2.15.0
