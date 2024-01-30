@@ -4,6 +4,7 @@ from model import GPT
 import tokenizer as tk
 import json
 import argparse
+import os
 
 if __name__ == '__main__':
     print('Available devices:', tf.config.list_physical_devices())
@@ -83,5 +84,8 @@ if __name__ == '__main__':
         batch_size = args.batch_size,
         verbose = 1
     )
-
-    model.network.save('data/output/gpt')
+    
+    output_dir = 'data/output'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    model.network.save(os.path.join(output_dir, 'gpt'))
