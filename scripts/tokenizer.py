@@ -66,7 +66,7 @@ def tokens_to_string(tokens, vocab):
         string += vocab[tokens[i]]
     return string
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     help_text = 'Use character wise tokenizer instear of Spacy tokenizer.'
     parser.add_argument('--no_spacy', action='store_true', help=help_text)
@@ -103,3 +103,6 @@ if __name__ == "__main__":
 
     with open('data/preprocessed/preprocessed_data.json', 'w') as preprocessed_file:
         preprocessed_file.write(json.dumps(preprocessed_data, indent = 4))
+
+if __name__ == "__main__":
+    main()
