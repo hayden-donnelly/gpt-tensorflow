@@ -55,30 +55,18 @@ python train.py --batch_size 1 --epochs 1
 
 Nerfed model (faster training, but model parameters are different from the original paper):
 ```
-python train.py --no_spacy --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024
+python train.py --num_attention_heads 6 --num_blocks 6 --feed_forward_dim 1024
 ```
 
-## Docker Environment
+## Docker Container
 Building image:
 ```
-docker-compose build
+bash docker_build.sh
 ```
 
-Starting container/environment:
+Starting container:
 ```
-docker-compose up -d
-```
-
-Opening a shell in container:
-```
-docker-compose exec gpt-tensorflow bash
-```
-
-Instead of opening a shell, you can also go to http://localhost:8888/ to access a Jupyter Lab instance running inside the container.
-
-Stopping container/environment:
-```
-docker-compose down
+bash docker_run.sh
 ```
 
 ## Citation
