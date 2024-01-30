@@ -20,6 +20,7 @@ in script arguments. For example, ``data/tiny_shakespeare.txt`` is correct while
 ```
 bash docker_build.sh
 ```
+
 2. Start Docker container:
 ```
 bash docker_run.sh
