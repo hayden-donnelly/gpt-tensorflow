@@ -2,9 +2,7 @@ import tensorflow as tf
 import spacy
 import json
 import argparse
-
-# Configurable parameters.
-text_path = '../data/tiny_shakespeare.txt'
+import os
 
 # Spacy tokenization.
 def spacy_tokenize(text):
@@ -73,9 +71,10 @@ if __name__ == "__main__":
     help_text = 'Use character wise tokenizer instear of Spacy tokenizer.'
     parser.add_argument('--no_spacy', action='store_true', help=help_text)
     help_text = 'Path to text file to be tokenized.'
-    parser.add_argument('--text_path', type=str, default=text_path, help=help_text)
+    parser.add_argument('--text_path', type=str, default='data/tiny_shakespeare.txt', help=help_text)
+    args = parser.parse_args()
 
-    with open(text_path, 'r', encoding='utf8') as f:
+    with open(args.text_path, 'r', encoding='utf8') as f:
         text = f.read()
 
     if args.no_spacy:
@@ -89,8 +88,11 @@ if __name__ == "__main__":
         'encoding_map': encoding_map, 
         'decoding_map': decoding_map
     }
-
-    with open('../data/preprocessed/vocab.json', 'w') as vocab_file:
+    
+    vocab_dir = 'data/preprocessed/vocab.json'
+    if not os.path.exists(vocab_dir):
+        os.makedirs(vocab_dir)
+    with open(os.path.join(vocab_dir, 'vocab.json'), 'w') as vocab_file:
         vocab_file.write(json.dumps(vocab, indent = 4))
 
     preprocessed_data = {
@@ -99,5 +101,5 @@ if __name__ == "__main__":
         'labels': tokens_to_labels(tokenized_text, vocab_size)
     }
 
-    with open('../data/preprocessed/preprocessed_data.json', 'w') as preprocessed_file:
+    with open('data/preprocessed/preprocessed_data.json', 'w') as preprocessed_file:
         preprocessed_file.write(json.dumps(preprocessed_data, indent = 4))
