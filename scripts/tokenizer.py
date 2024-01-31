@@ -63,7 +63,7 @@ def labels_to_tokens(labels):
 def tokens_to_string(tokens, vocab):
     string = ""
     for i in range(len(tokens)):
-        string += vocab[tokens[i]]
+        string += vocab[str(tokens[i])]
     return string
 
 def main():

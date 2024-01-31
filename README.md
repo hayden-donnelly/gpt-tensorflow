@@ -38,7 +38,7 @@ python scripts/train.py --num_attention_heads 6 --num_blocks 6 --feed_forward_di
 
 5. Sample the trained model (work in progress):
 ```
-python scripts/sample.py
+python scripts/sample.py --prompt "We know what we are, but know not what we may be."
 ```
 
 ## Tokenization
