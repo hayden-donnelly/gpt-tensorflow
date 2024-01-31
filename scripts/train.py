@@ -50,7 +50,7 @@ def main():
         dropout = args.dropout,
         vocab_size = vocab_size
     )
-
+    
     num_contexts = int(len(tokenized_text) / args.context_size)
     num_tokens = num_contexts * args.context_size
     print('Context size:', args.context_size)
@@ -88,7 +88,7 @@ def main():
     output_dir = 'data/output'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    model.network.save(os.path.join(output_dir, 'gpt'))
+    model.save(os.path.join(output_dir, 'gpt'))
 
-if __name__ == '__main__:
+if __name__ == '__main__':
     main()

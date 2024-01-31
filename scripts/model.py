@@ -27,64 +27,72 @@ class GPT(keras.Model):
         self.attention_mask = np.tril(np.ones((context_size, context_size)), 0)
         self.dropout = dropout
         self.vocab_size = vocab_size
-        self.network = self.create_network()
+        
+        self.token_embed = layers.Embedding(
+            input_dim = self.vocab_size, 
+            output_dim = self.token_embed_dim
+        )
+        self.positional_embed = layers.Embedding(
+            input_dim = self.context_size, 
+            output_dim = self.token_embed_dim
+        )
+        self.attentions = [
+            layers.MultiHeadAttention(
+                num_heads = self.num_attention_heads,
+                key_dim = self.attention_dim, 
+                value_dim = self.attention_dim,
+                dropout = self.dropout
+            )    
+            for _ in range(self.num_blocks)
+        ]
+        self.feed_forwards_1 = [
+            layers.Dense(
+                units = self.feed_forward_dim, 
+                activation = self.activation
+            ) 
+            for _ in range(self.num_blocks)
+        ]
+        self.feed_forwards_2 = [
+            layers.Dense(
+                units = self.token_embed_dim, 
+                activation = self.activation
+            ) 
+            for _ in range(self.num_blocks)
+        ]
+        self.dropouts = [
+            layers.Dropout(self.dropout)
+            for _ in range(self.num_blocks)
+        ]
+        self.layer_normalizations = [
+            layers.LayerNormalization() 
+            for _ in range(self.num_blocks * 2)
+        ]
+        self.final_dense = layers.Dense(
+            units = self.vocab_size, 
+            activation = 'softmax'
+        )
+       
+    def call(self, x, training = False):
+        x = self.token_embed(x) + self.positional_embed(tf.range(self.context_size))
+        for i in range(self.num_blocks):
+            att = self.attentions[i](x, x, attention_mask = self.attention_mask, training = training)
+            x = x + att
+            x = self.layer_normalizations[i * 2](x)
+            ff = self.feed_forwards_1[i](x)
+            ff = self.feed_forwards_2[i](ff)
+            ff = self.dropouts[i](ff, training = training)
+            x = x + ff
+            x = self.layer_normalizations[i * 2 + 1](x)
+        x = self.final_dense(x)
+        return x
 
     def train_step(self, data):
         with tf.GradientTape() as tape:
             inputs = data[0]
             labels = data[1]
-            probs = self.network(inputs, training = True)
-
+            probs = self(inputs, training = True)
             loss = self.compiled_loss(labels, probs)
             gradients = tape.gradient(loss, self.trainable_variables)
             self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
 
         return {m.name: m.result() for m in self.metrics}
-
-    def create_network(self):
-        inputs = layers.Input((self.context_size))
-        token_embed = layers.Embedding(
-            input_dim = self.vocab_size, 
-            output_dim = self.token_embed_dim
-        )(inputs)
-
-        positional_embed = layers.Embedding(
-            input_dim = self.context_size, 
-            output_dim = self.token_embed_dim
-        )(np.arange(self.context_size))
-
-        x = token_embed + positional_embed
-
-        for _ in range(self.num_blocks):
-            att = layers.MultiHeadAttention(
-                num_heads = self.num_attention_heads,
-                key_dim = self.attention_dim, 
-                value_dim = self.attention_dim,
-            )(x, x, attention_mask = self.attention_mask)
-            att = layers.Dropout(self.dropout)(att)
-            
-            x = x + att
-            x = layers.Dropout(self.dropout)(x)
-            x = layers.LayerNormalization()(x)
-
-            ff = layers.Dense(
-                units = self.feed_forward_dim, 
-                activation = self.activation
-            )(x)
-            
-            ff = layers.Dense(
-                units = self.token_embed_dim, 
-                activation = self.activation
-            )(ff)
-            
-            x = x + ff
-            x = layers.Dropout(self.dropout)(x)
-            x = layers.LayerNormalization()(x)
-        
-        x = layers.Dense(
-            units = self.vocab_size, 
-            activation = 'softmax'
-        )(x)
-
-        return keras.Model(inputs = inputs, outputs = x)
-        
