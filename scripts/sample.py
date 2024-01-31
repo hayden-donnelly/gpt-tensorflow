@@ -17,7 +17,8 @@ if __name__ == "__main__":
         vocab = json.load(f)
         decoding_map = vocab['decoding_map']
         encoding_map = vocab['encoding_map']
-    
+    vocab_size = len(encoding_map)
+
     model_path = 'data/output/gpt'
     assert os.path.exists(model_path), (
         'Could not find model. Try training a model with scripts/train.py before sampling.'
@@ -32,7 +33,8 @@ if __name__ == "__main__":
     tokens = tokens_tensor.numpy()
 
     for i in range(args.max_len):
-        pred_token = tf.math.argmax(gpt(tokens_tensor)[0, current_token_index, :]).numpy()
+        probs = gpt(tokens_tensor)[0, current_token_index, :].numpy()
+        pred_token = np.random.choice(np.arange(0, vocab_size), p = probs)
         tokens[0, current_token_index] = pred_token
         tokens_tensor = tf.convert_to_tensor(tokens)
         decoded_token = tk.tokens_to_string([pred_token], decoding_map)
