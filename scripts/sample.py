@@ -1,5 +1,6 @@
 import tensorflow as tf
 import tokenizer as tk
+import numpy as np
 import keras
 import json
 import argparse
